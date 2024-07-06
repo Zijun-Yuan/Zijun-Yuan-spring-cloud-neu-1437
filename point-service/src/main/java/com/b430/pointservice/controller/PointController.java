@@ -1,6 +1,6 @@
 package com.b430.pointservice.controller;
 
-import com.b430.commonmodule.entity.Order;
+import com.b430.commonmodule.Order;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

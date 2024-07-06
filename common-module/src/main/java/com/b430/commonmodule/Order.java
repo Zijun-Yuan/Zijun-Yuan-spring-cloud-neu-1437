@@ -1,4 +1,4 @@
-package com.b430.commonmodule.entity;
+package com.b430.commonmodule;
 
 public class Order {
     private String orderId;

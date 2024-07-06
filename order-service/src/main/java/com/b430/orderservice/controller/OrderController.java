@@ -1,6 +1,6 @@
 package com.b430.orderservice.controller;
 
-import com.b430.commonmodule.entity.Order;
+import com.b430.commonmodule.Order;
 import com.b430.orderservice.feignClient.PointServiceFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

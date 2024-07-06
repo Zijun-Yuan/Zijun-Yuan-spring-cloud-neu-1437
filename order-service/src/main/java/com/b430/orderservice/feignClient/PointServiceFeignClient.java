@@ -1,6 +1,6 @@
 package com.b430.orderservice.feignClient;
 
-import com.b430.commonmodule.entity.Order;
+import com.b430.commonmodule.Order;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
