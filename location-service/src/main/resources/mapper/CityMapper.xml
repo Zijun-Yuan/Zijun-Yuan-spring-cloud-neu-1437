@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.locationservice.mapper.CityMapper">
+
+    <!-- 根据省份ID查询城市 -->
+    <select id="selectByProvinceId" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.City">
+        SELECT * FROM city WHERE province_id = #{provinceId}
+    </select>
+
+    <!-- 根据城市Id查询城市 -->
+    <select id="selectByCityId" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.City">
+        SELECT * FROM city WHERE city_code = #{cityId}
+    </select>
+
+    <!-- 查询所有城市 -->
+    <select id="selectAllCities" resultType="com.b430.commonmodule.model.entity.City">
+        SELECT * FROM city
+    </select>
+
+    <!-- 插入City -->
+    <insert id="insertCity" parameterType="com.b430.commonmodule.model.entity.City">
+        INSERT INTO city (city_code, city_name, province_id)
+        VALUES (#{cityCode}, #{cityName}, #{provinceId})
+    </insert>
+
+    <!-- 更新City -->
+    <update id="updateCity" parameterType="com.b430.commonmodule.model.entity.City">
+        UPDATE city
+        SET city_name = #{cityName},
+            province_id = #{provinceId}
+        WHERE city_code = #{cityCode}
+    </update>
+
+
+</mapper>

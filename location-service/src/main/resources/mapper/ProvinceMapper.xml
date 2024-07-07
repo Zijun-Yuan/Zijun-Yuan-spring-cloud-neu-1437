@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.locationservice.mapper.ProvinceMapper">
+
+    <!-- 根据省名查询Province -->
+    <select id="selectByProvinceId" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Province">
+        SELECT * FROM province WHERE province_id = #{provinceId}
+    </select>
+
+    <!-- 查询所有省 -->
+    <select id="selectAllProvinces" resultType="com.b430.commonmodule.model.entity.Province">
+        SELECT * FROM province
+    </select>
+
+    <!-- 插入Province -->
+    <insert id="insertProvince" parameterType="com.b430.commonmodule.model.entity.Province">
+        INSERT INTO province (province_name, simple_name)
+        VALUES (#{provinceName}, #{simpleName})
+    </insert>
+
+    <!-- 更新Province -->
+    <update id="updateProvince" parameterType="com.b430.commonmodule.model.entity.Province">
+        UPDATE province
+        SET province_name = #{provinceName},
+        simple_name = #{simpleName}
+        WHERE province_id = #{provinceId}
+    </update>
+
+</mapper>

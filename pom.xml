@@ -18,6 +18,8 @@
         <module>admin-task-service</module>
         <module>admin-personnel-service</module>
         <module>admin-data-service</module>
+        <module>data-screen-service</module>
+        <module>location-service</module>
     </modules>
 
     <properties>
