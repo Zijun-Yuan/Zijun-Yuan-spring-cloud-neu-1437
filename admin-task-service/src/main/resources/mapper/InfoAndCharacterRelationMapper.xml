@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.admintaskservice.mapper.InfoAndCharacterRelationMapper">
+
+    <insert id="assignInspector">
+        INSERT INTO info_with_inspector (i_id, info_id, inspector_id, isdel)
+        VALUES (#{iId}, #{infoId}, #{inspectorId}, 0);
+    </insert>
+
+    <insert id="assignSupervisor">
+        INSERT INTO info_with_supervisor (s_id, info_id, supervisor_id, isdel)
+        VALUES (#{sId}, #{infoId}, #{supervisorId}, 0);
+    </insert>
+
+    <select id="getInfoWithSupervisorNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS total_count_relate FROM info_with_supervisor;
+    </select>
+
+    <select id="getInfoWithInspectorNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS total_count_relate FROM info_with_inspector;
+    </select>
+
+    <select id="getInfoByInspectorId" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE info_id IN (SELECT info_id FROM info_with_inspector WHERE inspector_id = #{inspectorId});
+    </select>
+
+    <select id="getInfoBySupervisorId" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE info_id IN (SELECT info_id FROM info_with_supervisor WHERE supervisor_id = #{supervisorId});
+    </select>
+
+    <select id="getInspectorByInfoId" resultType="com.b430.commonmodule.model.entity.Inspector">
+        SELECT *
+        FROM inspector
+        WHERE inspector_id IN (SELECT inspector_id FROM info_with_inspector WHERE info_id = #{infoId});
+    </select>
+
+    <select id="getSupervisorByInfoId" resultType="com.b430.commonmodule.model.entity.Supervisor">
+        SELECT *
+        FROM supervisor
+        WHERE supervisor_id IN (SELECT supervisor_id FROM info_with_supervisor WHERE info_id = #{infoId});
+    </select>
+
+    <select id="getInfoByIId" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE info_id = (SELECT info_id FROM info_with_inspector WHERE i_id = #{iId});
+    </select>
+
+    <select id="getInfoBySId" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE info_id = (SELECT info_id FROM info_with_supervisor WHERE s_id = #{sId});
+    </select>
+
+    <select id="getInspectorByIId" resultType="com.b430.commonmodule.model.entity.Inspector">
+        SELECT *
+        FROM inspector
+        WHERE inspector_id IN (SELECT inspector_id FROM info_with_inspector WHERE i_id = #{iId});
+    </select>
+
+    <select id="getSupervisorBySId" resultType="com.b430.commonmodule.model.entity.Supervisor">
+        SELECT *
+        FROM supervisor
+        WHERE supervisor_id IN (SELECT supervisor_id FROM info_with_supervisor WHERE s_id = #{sId});
+    </select>
+
+</mapper>

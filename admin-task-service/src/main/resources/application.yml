@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: admin-task-service
+  config:
+    import: nacos:admin-task-service-dev.yml
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.datascreenservice.mapper.DataScreenMapper">
+
+    <sql id="constants">
+        <bind name="so2Threshold" value="60"/>
+        <bind name="coThreshold" value="4"/>
+        <bind name="o3Threshold" value="160"/>
+        <bind name="pm25Threshold" value="75"/>
+    </sql>
+
+    <!-- LEFT TOP -->
+    <select id="getLeftTopData" resultType="com.b430.commonmodule.model.dto.dataScreen.LeftTopResponseDTO">
+        SELECT (SELECT COUNT(*) FROM info WHERE status != 0) AS InfoTotal,
+            (
+        SELECT COUNT(*)
+        FROM info
+        WHERE status = 1
+           OR status = 2) AS InfoSupervisorCount
+            , (
+        SELECT COUNT(*)
+        FROM info
+        WHERE status = 3) AS InfoInspectorCount
+            , (
+        SELECT COUNT(*)
+        FROM info
+        WHERE status = 3 AND aqi_level > 2) AS ExceedTotal
+    </select>
+
+
+    <!-- LEFT CENTER-->
+    <!-- 查询Aqi污染程度数量 -->
+    <select id="getAqiTotal" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM info
+        WHERE aqi_level = #{aqiLevel};
+    </select>
+
+    <!-- LEFT BOTTOM -->
+    <!-- 查询最近12条监督员Info -->
+    <select id="getLatestSupInfo" resultType="com.b430.commonmodule.model.dto.dataScreen.LeftBottomResponseDTO">
+        SELECT i.supervisor_name AS realName,
+               i.time_supervisor AS time,
+               i.aqi_level AS aqiLevel,
+        i.feedback AS feedback,
+        CONCAT(p.province_name, ' ', c.city_name, ' ', i.address) AS location
+        FROM
+            info i
+            JOIN
+            city c
+        ON i.city_code = c.city_code
+            JOIN
+            province p ON c.province_id = p.province_id
+        WHERE
+            i.status IN (1
+            , 2)
+        ORDER BY
+            i.time_supervisor DESC
+            LIMIT 12
+    </select>
+
+    <!-- CENTER MAP -->
+    <resultMap id="centerMapResponseDTOResultMap" type="com.b430.commonmodule.model.dto.dataScreen.CenterMapResponseDTO">
+        <result property="regionCode" column="regionCode"/>
+        <collection property="dataList" ofType="com.b430.commonmodule.model.dto.dataScreen.CenterMapResponseDTO$DataItem">
+            <result property="name" column="name"/>
+            <result property="value" column="value"/>
+        </collection>
+    </resultMap>
+
+    <select id="getMapDataProvinceList" resultMap="centerMapResponseDTOResultMap" parameterType="java.lang.Integer">
+        WITH province_data AS (
+            SELECT p.province_name AS name, COALESCE(AVG(i.aqi_real), 0) AS value
+        FROM province p
+            LEFT JOIN city c ON p.province_id = c.province_id
+            LEFT JOIN info i ON c.city_code = i.city_code AND i.status = 3
+        GROUP BY p.province_name
+            )
+        SELECT #{regionCode} AS regionCode,
+               name,
+               value
+        FROM province_data;
+    </select>
+
+
+
+    <select id="getMapDataCityList" resultMap="centerMapResponseDTOResultMap" parameterType="java.lang.Integer">
+        WITH city_data AS (
+            SELECT c.city_name AS name, COALESCE(AVG(i.aqi_real), 0) AS value
+        FROM city c
+            LEFT JOIN info i ON c.city_code = i.city_code AND i.status = 3
+        WHERE c.province_id = #{provinceId}
+        GROUP BY c.city_name
+            )
+        SELECT #{provinceId} AS regionCode,
+               name,
+               value
+        FROM city_data;
+    </select>
+
+    <!-- CENTER BOTTOM -->
+    <select id="getProvinceExceed"
+            resultType="com.b430.commonmodule.model.dto.dataScreen.CenterBottomResponseDTO">
+        SELECT p.simple_name                                               AS simpleName,
+               (COUNT(DISTINCT i.city_code) / COUNT(DISTINCT c.city_code)) AS UrbanCoverRate,
+               SUM(CASE WHEN i.so2 > #{so2Threshold} THEN 1 ELSE 0 END)    AS so2Exceed,
+               SUM(CASE WHEN i.co > #{coThreshold} THEN 1 ELSE 0 END)      AS coExceed,
+               SUM(CASE WHEN i.o3 > #{o3Threshold} THEN 1 ELSE 0 END)      AS o3Exceed,
+               SUM(CASE WHEN i.pm25 > #{pm25Threshold} THEN 1 ELSE 0 END)  AS pm25Exceed
+        FROM province p
+                 LEFT JOIN
+             city c ON p.province_id = c.province_id
+                 LEFT JOIN
+             info i ON c.city_code = i.city_code AND i.status = 3
+        GROUP BY p.province_id
+    </select>
+
+    <!-- RIGHT TOP -->
+    <select id="getOneYearAqiExceed"
+            resultType="com.b430.commonmodule.model.dto.dataScreen.RightTopResponseDTO">
+        WITH months AS (
+            SELECT DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL n MONTH), '%Y-%m') AS monthTime
+            FROM (
+                     SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                     UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7
+                     UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11
+                 ) numbers
+        )
+        SELECT m.monthTime,
+               COALESCE(COUNT(i.time_inspector), 0) AS exceedNum
+        FROM months m
+                 LEFT JOIN info i ON DATE_FORMAT(i.time_inspector, '%Y-%m') = m.monthTime
+            AND i.status = 3
+            AND i.aqi_level > 2
+        GROUP BY m.monthTime
+        ORDER BY m.monthTime DESC
+    </select>
+
+
+    <!-- RIGHT CENTER -->
+    <select id="getPollutionRank"
+            resultType="com.b430.commonmodule.model.dto.dataScreen.RightCenterResponseDTO">
+        SELECT
+            c.city_name AS cityName,
+            i.aqi_real AS aqiReal
+        FROM
+            info i
+                JOIN
+            city c ON i.city_code = c.city_code
+        ORDER BY
+            i.aqi_real DESC
+            LIMIT 8
+    </select>
+
+
+
+    <!-- RIGHT BOTTOM -->
+    <select id="getLatestInsInfo" resultType="com.b430.commonmodule.model.dto.dataScreen.RightBottomResponseDTO">
+        SELECT
+            i.inspector_name AS realName,
+            i.time_inspector AS time,
+        i.aqi_level AS `rank`,
+        i.aqi_real AS aqiReal,
+        CONCAT(p.province_name, ' ', c.city_name, ' ', i.address) AS location
+        FROM
+            info i
+            JOIN
+            city c ON i.city_code = c.city_code
+            JOIN
+            province p ON c.province_id = p.province_id
+        WHERE
+            i.status = 3
+        ORDER BY
+            i.time_inspector DESC
+            LIMIT 12
+    </select>
+
+</mapper>

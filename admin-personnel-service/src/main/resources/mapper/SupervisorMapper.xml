@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.adminpersonnelservice.mapper.SupervisorMapper">
+
+    <!-- 根据tel_id查询Supervisor -->
+    <select id="selectByTelId" parameterType="java.lang.String" resultType="com.b430.commonmodule.model.entity.Supervisor">
+        SELECT * FROM supervisor WHERE tel_id = #{telId}
+    </select>
+
+    <!-- 根据supervisor_id查询Supervisor -->
+    <select id="selectBySupervisorId" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Supervisor">
+        SELECT * FROM supervisor WHERE supervisor_id = #{supervisorId}
+    </select>
+
+    <!-- 查询所有未删除的Supervisor -->
+    <select id="selectAllNotDeleted" resultType="com.b430.commonmodule.model.entity.Supervisor">
+        SELECT * FROM supervisor WHERE isdel = 0
+    </select>
+
+    <!-- 插入Supervisor -->
+    <insert id="insertSupervisor" parameterType="com.b430.commonmodule.model.entity.Supervisor">
+        INSERT INTO supervisor (tel_id, password, real_name, birthday, sex, age, isdel, remarks)
+        VALUES (#{telId}, #{password}, #{realName}, #{birthday}, #{sex}, #{age}, #{isdel}, #{remarks})
+    </insert>
+
+    <!-- 更新Supervisor -->
+    <update id="updateSupervisor" parameterType="com.b430.commonmodule.model.entity.Supervisor">
+        UPDATE supervisor
+        SET tel_id = #{telId},
+            password = #{password},
+            real_name = #{realName},
+            birthday = #{birthday},
+            sex = #{sex},
+            age = #{age},
+            isdel = #{isdel},
+            remarks = #{remarks}
+        WHERE supervisor_id = #{supervisorId}
+    </update>
+
+    <!-- 根据Supervisor_id查询对应事务列表 -->
+    <select id="getInfoListToSupervisor" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT i.*
+        FROM info i
+        JOIN info_with_supervisor r ON i.info_id = r.info_id
+        WHERE r.supervisor_id = #{supervisorId}
+    </select>
+
+    <!-- 根据info_id查询详细的事务信息 -->
+    <select id="getDetailedInfo" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE info_id = #{infoId}
+    </select>
+
+    <select id="getSupervisorIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT supervisor_id
+        FROM supervisor
+        WHERE real_name = #{supervisorName};
+    </select>
+
+</mapper>

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: admin-personnel-service
+  config:
+    import: nacos:admin-personnel-service-dev.yml
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+      config:
+        server-addr: localhost:8848
+        file-extension: yml
+

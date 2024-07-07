@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.adminpersonnelservice.mapper.InfoMapper">
+
+    <!-- 根据城市代码查询Info -->
+    <select id="selectByCityCode" parameterType="java.lang.String" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT * FROM info WHERE city_code = #{cityCode}
+    </select>
+
+    <!-- 查询所有未删除的Info -->
+    <select id="selectMultiQuery" parameterType="com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT * FROM info
+        <where>
+            <if test="cityCode != null and cityCode.size > 0">
+                AND city_code IN
+                <foreach item="code" index="index" collection="cityCode" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="aqiLevel != null">
+                AND aqi_level = #{aqiLevel}
+            </if>
+            <if test="timeSupervisor != null">
+                AND DATE(time_supervisor) = DATE(#{timeSupervisor})
+            </if>
+            <if test="timeInspector != null">
+                AND DATE(time_inspector) = DATE(#{timeInspector})
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="supervisorName != null and supervisorName != ''">
+                AND supervisor_name LIKE CONCAT('%', #{supervisorName}, '%')
+            </if>
+            <if test="inspectorName != null and inspectorName != ''">
+                AND inspector_name LIKE CONCAT('%', #{inspectorName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 插入Info -->
+    <insert id="insertInfo" parameterType="com.b430.commonmodule.model.entity.Info">
+        INSERT INTO info (info_id, status, aqi_level, city_code, address, feedback, time, so2, co, o3, pm25, supervisor_name, inspector_name)
+        VALUES (#{infoId}, #{status}, #{aqiLevel}, #{cityCode}, #{address}, #{feedback}, #{time}, #{so2}, #{co}, #{o3}, #{pm25}, #{supervisorName}, #{inspectorName})
+    </insert>
+
+    <!-- 更新Info -->
+    <update id="updateInfo" parameterType="com.b430.commonmodule.model.entity.Info">
+        UPDATE info
+        SET status = #{status},
+            aqi_level = #{aqiLevel},
+            city_code = #{cityCode},
+            address = #{address},
+            feedback = #{feedback},
+            time_supervisor = #{timeSupervisor},
+            time_inspector = #{timeInspector},
+            so2 = #{so2},
+            co = #{co},
+            o3 = #{o3},
+            pm25 = #{pm25},
+            supervisor_name = #{supervisorName},
+            inspector_name = #{inspectorName},
+            aqi_real = #{aqiReal}
+        WHERE info_id = #{infoId}
+    </update>
+
+    <!-- 根据网格员code查询Info -->
+    <select id="selectByInspectorCode" parameterType="java.lang.String" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT info.*
+        FROM info
+        JOIN info_with_inspector ON info.info_id = info_with_inspector.info_id
+        JOIN inspector ON inspector.inspector_id = info_with_inspector.inspector_id
+        WHERE inspector.inspector_code = #{inspectorCode}
+    </select>
+
+    <!-- 根据公众监督员id查询Info -->
+    <select id="selectBySupervisorId" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT info.*
+        FROM info
+        JOIN info_with_supervisor ON info.info_id = info_with_supervisor.info_id
+        WHERE info_with_supervisor.supervisor_id = #{supervisorId}
+    </select>
+
+    <!-- 获取info数据条数 -->
+    <select id="getMultiQueryInfoNum" parameterType="com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM info
+        <where>
+            <if test="cityCode != null and cityCode.size > 0">
+                AND city_code IN
+                <foreach item="code" index="index" collection="cityCode" open="(" separator="," close=")">
+                    #{code}
+                </foreach>
+            </if>
+            <if test="aqiLevel != null">
+                AND aqi_level = #{aqiLevel}
+            </if>
+            <if test="timeSupervisor != null">
+                AND DATE(time_supervisor) = DATE(#{timeSupervisor})
+            </if>
+            <if test="timeInspector != null">
+                AND DATE(time_inspector) = DATE(#{timeInspector})
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="supervisorName != null and supervisorName != ''">
+                AND supervisor_name LIKE CONCAT('%', #{supervisorName}, '%')
+            </if>
+            <if test="inspectorName != null and inspectorName != ''">
+                AND inspector_name LIKE CONCAT('%', #{inspectorName}, '%')
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取info数据条数 -->
+    <select id="getInfoNum" resultType="java.lang.Integer">
+        SELECT COUNT(*) AS total_count_info FROM info;
+    </select>
+
+    <!-- 获取info数据条数 -->
+    <select id="getInfoList" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT * FROM info;
+    </select>
+
+    <!-- 根据信息id查询Info -->
+    <select id="getInfoById" parameterType="java.lang.Integer" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT info.*
+        FROM info
+        WHERE info_id = #{id}
+    </select>
+
+    <!-- 公众监督员反馈事务信息 -->
+    <insert id="addInfo" parameterType="map">
+        INSERT INTO info (info_id, status, aqi_level, city_code, address, feedback, time_supervisor, so2, co, o3, pm25, supervisor_name, inspector_name)
+        VALUES (#{infoCount}+1, #{info.status}, #{info.aqiLevel}, #{info.cityCode}, #{info.address}, #{info.feedback}, #{info.timeSupervisor}, #{info.so2}, #{info.co}, #{info.o3}, #{info.pm25}, #{info.supervisorName}, #{info.inspectorName})
+    </insert>
+
+    <!-- 添加关联信息 -->
+    <insert id="addRelate" parameterType="map">
+        INSERT INTO info_with_supervisor (s_id, info_id, supervisor_id)
+        VALUES (#{relateCount}+1, #{infoCount}+1, #{supervisorId})
+    </insert>
+
+    <!-- 更新Info的公众监督员名称 -->
+    <update id="updateInfoSupervisorName" parameterType="com.b430.commonmodule.model.entity.Supervisor" >
+        UPDATE info
+            JOIN info_with_supervisor ON info.info_id = info_with_supervisor.info_id
+            SET supervisor_name = #{supervisorName}
+        WHERE supervisor_id = #{supervisorId}
+    </update>
+
+    <!-- 更新Info的网格员名称 -->
+    <update id="updateInfoInspectorName" parameterType="com.b430.commonmodule.model.entity.Inspector" >
+        UPDATE info
+            JOIN info_with_inspector ON info.info_id = info_with_inspector.info_id
+            SET inspector_name = #{inspectorName}
+        WHERE inspector_id = #{inspectorId}
+    </update>
+
+</mapper>

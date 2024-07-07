@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.admintaskservice.mapper.AdminMapper">
+
+    <!-- 根据admin_code查询Admin -->
+    <select id="selectByAdminCode" parameterType="java.lang.String" resultType="com.b430.commonmodule.model.entity.Admin">
+        SELECT * FROM admin WHERE admin_code = #{adminCode}
+    </select>
+
+    <!-- 查询所有Admin -->
+    <select id="selectAllAdmins" resultType="com.b430.commonmodule.model.entity.Admin">
+        SELECT * FROM admin
+    </select>
+
+    <!-- 插入Admin -->
+    <insert id="insertAdmin" parameterType="com.b430.commonmodule.model.entity.Admin">
+        INSERT INTO admin (admin_code, password, remarks)
+        VALUES (#{adminCode}, #{password}, #{remarks})
+    </insert>
+
+    <!-- 更新Admin -->
+    <update id="updateAdmin" parameterType="com.b430.commonmodule.model.entity.Admin">
+        UPDATE admin
+        SET admin_code = #{adminCode},
+            password = #{password},
+            remarks = #{remarks}
+        WHERE admin_id = #{adminId}
+    </update>
+
+</mapper>

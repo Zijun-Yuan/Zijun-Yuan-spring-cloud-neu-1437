@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.b430.admindataservice.mapper.DataMapper">
+
+    <!-- 根据aqiLevel查询对应数据数量 -->
+    <select id="getCountByAqiLevel" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM info
+        WHERE aqi_level = #{aqiLevel}
+    </select>
+
+    <!-- 查询省会城市/大城市的Info覆盖数量 -->
+    <select id="getCountOfCityCodeList" resultType="java.lang.Integer"
+            parameterType="java.util.List">
+        SELECT COUNT(DISTINCT city_code)
+        FROM info
+        WHERE city_code IN
+        <foreach item="cityCode" index="index" collection="CityCodeList" open="(" separator="," close=")">
+            #{cityCode}
+        </foreach>
+    </select>
+
+    <!-- 查询指定月份的AQI数据超标数量 -->
+    <select id="getCountByMonth" resultType="java.lang.Integer" parameterType="java.lang.String">
+        SELECT COUNT(*)
+        FROM info
+        WHERE aqi_level >= 3
+          AND DATE_FORMAT(time_inspector, '%Y-%m') = #{month}
+    </select>
+
+    <!-- 获取所有Info数据列表 -->
+    <select id="getInfoListInspector" resultType="com.b430.commonmodule.model.entity.Info">
+        SELECT *
+        FROM info
+        WHERE status = 3
+    </select>
+
+    <!-- 根据城市代码获取省份信息 -->
+    <select id="getProvinceByCityCode" resultType="com.b430.commonmodule.model.entity.Province"
+            parameterType="java.lang.String">
+        SELECT *
+        FROM province
+                 LEFT JOIN city ON province.province_id = city.province_id
+        WHERE city.city_code = #{cityCode}
+    </select>
+    <select id="getProvinceList" resultType="com.b430.commonmodule.model.entity.Province">
+        SELECT *
+        FROM province
+    </select>
+
+</mapper>
