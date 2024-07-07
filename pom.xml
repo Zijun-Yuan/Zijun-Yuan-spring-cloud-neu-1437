@@ -11,10 +11,10 @@
     <description>spring-cloud-neu1437</description>
 
     <modules>
-        <module>order-service</module>
-        <module>point-service</module>
+        <module>common-module</module>
         <module>gateway-service</module>
-        <module>user-service</module>
+        <module>supervisor-service</module>
+        <module>inspector-service</module>
     </modules>
 
     <properties>

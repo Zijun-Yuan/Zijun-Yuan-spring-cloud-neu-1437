@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        String token = JwtUtil.getToken("123");
+        String token = JwtUtil.getToken("123", "role", "role-issuer");
         // 将token存入redis中，并设置超时时间
         redisTemplate.opsForValue().set(token, token, redisTimeout, TimeUnit.SECONDS);
         // 然后返回token
