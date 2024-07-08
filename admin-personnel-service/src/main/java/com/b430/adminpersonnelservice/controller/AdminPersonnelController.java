@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(tags = "管理员人员管理接口")
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/personnel")
 public class AdminPersonnelController {
 
     @Autowired

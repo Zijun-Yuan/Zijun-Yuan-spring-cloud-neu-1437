@@ -52,5 +52,7 @@ public class Inspector implements Serializable {
     @ApiModelProperty(value = "备注")
     private String remarks;
 
+    @ApiModelProperty(value = "token")
+    private String token;
 
 }

@@ -25,12 +25,28 @@ public class GlobalFilterConfig implements GlobalFilter {
         ServerHttpResponse response = exchange.getResponse();
 
         String path = request.getURI().getPath();
-        if (path.startsWith("/admin/login") || path.startsWith("/supervisor/login") || path.startsWith("/inspector/login")) {
+        if (path.startsWith("/api/admin/task/login") || path.startsWith("/api/supervisor/login")
+                || path.startsWith("/api/supervisor/register") || path.startsWith("/api/inspector/login")
+                || path.startsWith("/api/dataScreen") || path.startsWith("/api/location")) {
             return chain.filter(exchange);
         }
 
         String token = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (token == null || token.isEmpty()) {
+        if (token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
+            System.out.println("Token not found or invalid format");
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            return response.setComplete();
+        }
+
+        token = token.replace("Bearer ", "").trim();
+
+        try {
+            boolean isValid = JwtUtil.verify(token);
+            if (!isValid) {
+                throw new RuntimeException("Token verification failed");
+            }
+        } catch (Exception e) {
+            System.out.println("Token not valid (try catch): " + e.getMessage());
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();
         }
@@ -41,6 +57,7 @@ public class GlobalFilterConfig implements GlobalFilter {
             userId = JwtUtil.getUserIdFromToken(token);
             role = JwtUtil.getRoleFromToken(token);
         } catch (Exception e) {
+            System.out.println("Token not valid (try catch): " + e.getMessage());
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return response.setComplete();
         }
@@ -49,6 +66,7 @@ public class GlobalFilterConfig implements GlobalFilter {
         String redisToken = redisTemplate.opsForValue().get(redisKey);
         if (redisToken == null || !redisToken.equals(token)) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED);
+            System.out.println("Token not valid");
             return response.setComplete();
         }
 
@@ -63,11 +81,11 @@ public class GlobalFilterConfig implements GlobalFilter {
     private boolean isAuthorizedPath(String path, String role) {
         switch (role) {
             case "Admin":
-                return path.startsWith("/admin");
+                return path.startsWith("/api/admin");
             case "Supervisor":
-                return path.startsWith("/supervisor");
+                return path.startsWith("/api/supervisor");
             case "Inspector":
-                return path.startsWith("/inspector");
+                return path.startsWith("/api/inspector");
             default:
                 return false;
         }

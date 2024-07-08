@@ -18,7 +18,7 @@ import java.util.List;
 
 @Api(tags = "管理员统计数据管理")
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/data")
 public class AdminDataController {
     @Autowired
     private IAdminDataService adminDataService;

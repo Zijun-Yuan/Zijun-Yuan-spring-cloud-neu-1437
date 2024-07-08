@@ -11,23 +11,29 @@ import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.admintaskservice.service.IAdminTaskService;
+import com.b430.commonmodule.util.JwtUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Api(tags = "管理员任务管理")
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/task")
 public class AdminTaskController {
 
     @Autowired
     private IAdminTaskService adminTaskService;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * 管理员登录
@@ -37,11 +43,20 @@ public class AdminTaskController {
      */
     @ApiOperation(value = "管理员登录", notes = "管理员登录接口")
     @PostMapping("/login")
-    public BaseResponse<Boolean> login(@RequestBody AdminLoginRequestDTO request, HttpSession session) {
+    public BaseResponse<String> login(@RequestBody AdminLoginRequestDTO request) {
+//        Admin admin = adminTaskService.login(request.getAdminCode(), request.getPassword());
+//        if (admin != null) {
+//            session.setAttribute("admin", admin);
+//            return ResultUtils.success(true);
+//        } else {
+//            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "管理员登录失败");
+//        }
         Admin admin = adminTaskService.login(request.getAdminCode(), request.getPassword());
         if (admin != null) {
-            session.setAttribute("admin", admin);
-            return ResultUtils.success(true);
+            String token = JwtUtil.getToken(request.getAdminCode(), "Admin", "admin-issuer");
+            String redisKey = "Admin:" + request.getAdminCode();
+            redisTemplate.opsForValue().set(redisKey, token, 1, TimeUnit.DAYS);
+            return ResultUtils.success(token);
         } else {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "管理员登录失败");
         }
