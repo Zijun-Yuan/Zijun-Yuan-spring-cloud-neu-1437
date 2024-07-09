@@ -1,6 +1,7 @@
 package com.b430.commonmodule.model.dto.info;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,8 +30,10 @@ public class InfoSearchRequestDTO implements Serializable {
     @ApiModelProperty(value = "污染等级")
     private Integer aqiLevel;
     @ApiModelProperty(value = "监督员上报时间")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date timeSupervisor;
     @ApiModelProperty(value = "网格员上报时间")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date timeInspector;
     @ApiModelProperty(value = "状态")
     private Integer status;
