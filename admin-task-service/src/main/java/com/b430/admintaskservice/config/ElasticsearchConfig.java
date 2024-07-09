@@ -1,4 +1,4 @@
-package com.b430.commonmodule.config;
+package com.b430.admintaskservice.config;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -17,7 +17,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.b430.commonmodule.repository")
+@EnableElasticsearchRepositories(basePackages = "com.b430.admintaskservice.service")
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticsearchConfig.class);

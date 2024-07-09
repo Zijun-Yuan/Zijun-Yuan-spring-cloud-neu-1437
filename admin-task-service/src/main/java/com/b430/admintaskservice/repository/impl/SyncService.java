@@ -1,8 +1,9 @@
-package com.b430.admintaskservice.service.impl;
+package com.b430.admintaskservice.repository.impl;
 
 import com.b430.admintaskservice.mapper.InfoMapper;
+import com.b430.admintaskservice.repository.InfoRepository;
 import com.b430.commonmodule.model.entity.Info;
-import com.b430.commonmodule.repository.InfoRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
