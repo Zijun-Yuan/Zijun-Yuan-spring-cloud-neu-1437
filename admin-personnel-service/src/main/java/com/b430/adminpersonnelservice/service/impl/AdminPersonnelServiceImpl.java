@@ -115,7 +115,10 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
 
     @Override
     public Integer getInspectorNum(InspectorSelectDTO inspectorSelectDTO) {
-        return inspectorMapper.getInspectorNum(inspectorSelectDTO);
+        Integer inspectorNum = inspectorMapper.getInspectorNum(inspectorSelectDTO);
+        System.out.println("--------------------getInspectorNum--------------------");
+        System.out.println(inspectorNum);
+        return inspectorNum;
     }
 
     @Override

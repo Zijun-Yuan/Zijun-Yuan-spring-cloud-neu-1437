@@ -39,13 +39,6 @@ public class SupervisorController {
     @ApiOperation(value = "公众监督员登录", notes = "输入监督员编号和密码进行登录")
     @PostMapping("/login")
     public BaseResponse<Supervisor> login(@RequestBody SupervisorLoginRequestDTO request) {
-//        Supervisor supervisor = supervisorService.login(request.getTelId(), request.getPassword());
-//        if (supervisor != null){
-//            session.setAttribute("supervisor", supervisor);
-//            return ResultUtils.success(supervisor);
-//        }else {
-//            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "SupervisorLogin failed");
-//        }
         Supervisor supervisor = supervisorService.login(request.getTelId(), request.getPassword());
         if (supervisor != null) {
             String token = JwtUtil.getToken(request.getTelId(), "Supervisor", "supervisor-issuer");

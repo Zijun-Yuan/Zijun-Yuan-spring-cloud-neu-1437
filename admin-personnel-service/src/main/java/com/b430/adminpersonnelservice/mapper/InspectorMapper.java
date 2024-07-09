@@ -4,6 +4,7 @@ import com.b430.commonmodule.model.dto.inspector.InspectorSelectDTO;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -84,7 +85,7 @@ public interface InspectorMapper extends BaseMapper<Inspector> {
      * @param inspectorSelectDTO
      * @return 查询后的Inspector列表
      */
-    List<Inspector> getInspectorList(InspectorSelectDTO inspectorSelectDTO);
+    List<Inspector> getInspectorList(@Param("inspectorSelectDTO") InspectorSelectDTO inspectorSelectDTO);
 
 
 }

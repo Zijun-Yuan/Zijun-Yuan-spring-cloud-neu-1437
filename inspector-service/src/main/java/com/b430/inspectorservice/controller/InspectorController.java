@@ -93,7 +93,7 @@ public class InspectorController {
      * @param inspectorCode
      * @return
      */
-    @CrossOrigin(origins = "http://localhost:8080")
+//    @CrossOrigin(origins = "http://localhost:8080")
     @ApiOperation(value = "网格员获取对应事务列表", notes = "网格员获取对应事务列表")
     @GetMapping("/getInfoList")
     public BaseResponse<List<Info>> getInfoList(@RequestParam String inspectorCode) {
