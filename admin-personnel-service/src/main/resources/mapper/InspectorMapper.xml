@@ -54,4 +54,37 @@
         </where>
     </select>
 
+    <select id="getInspectorNum" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM inspector
+        <where>
+            <if test="telNum != null and telNum != ''">
+                AND tel_num LIKE CONCAT('%', #{telNum}, '%')
+            </if>
+            <if test="cityCodeList != null and cityCodeList.size() > 0">
+                AND city_code IN
+                <foreach item="cityCode" collection="cityCodeList" open="(" separator="," close=")">
+                    #{cityCode}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="getInspectorList" resultType="com.b430.commonmodule.model.entity.Inspector">
+        SELECT *
+        FROM inspector
+        <where>
+            <if test="telNum != null and telNum != ''">
+                AND tel_num LIKE CONCAT('%', #{telNum}, '%')
+            </if>
+            <if test="cityCodeList != null and cityCodeList.size() > 0">
+                AND city_code IN
+                <foreach item="cityCode" collection="cityCodeList" open="(" separator="," close=")">
+                    #{cityCode}
+                </foreach>
+            </if>
+        </where>
+        LIMIT #{pageSize} OFFSET #{offset};
+    </select>
+
 </mapper>

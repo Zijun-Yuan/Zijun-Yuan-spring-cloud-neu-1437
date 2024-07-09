@@ -101,11 +101,7 @@ public class AdminTaskController {
     @ApiOperation(value = "管理员多条件查询获取事务列表", notes = "管理员多条件查询获取事务列表")
     @PostMapping("/getMultiQueryInfoList")
     public BaseResponse<PageInfo<Info>> getAllInfoList(@RequestBody InfoSearchRequestDTO request) {
-        System.out.println(request);
-        System.out.println(request.getPageNum());
-        System.out.println(request.getPageSize());
         PageHelper.startPage(request.getPageNum(), request.getPageSize());
-
         List<Info> infoList = adminTaskService.getMultiQueryInfoList(request);
         PageInfo<Info> pageInfo = new PageInfo<>(infoList);
         if (infoList == null) {

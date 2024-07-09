@@ -3,6 +3,7 @@ package com.b430.adminpersonnelservice.controller;
 import com.b430.commonmodule.common.BaseResponse;
 import com.b430.commonmodule.common.ErrorCode;
 import com.b430.commonmodule.common.ResultUtils;
+import com.b430.commonmodule.model.dto.inspector.InspectorSelectDTO;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.adminpersonnelservice.service.IAdminPersonnelService;
@@ -118,13 +119,81 @@ public class AdminPersonnelController {
      * @return
      */
     @ApiOperation(value = "网格员根据城市获取网格员列表", notes = "网格员根据城市获取网格员列表")
-    @PostMapping ("/getListByCityCodeList")
+    @GetMapping ("/getListByCityCodeList")
     public BaseResponse<List<Inspector>> getListByCityCodeList(@RequestBody List<String> cityCodeList){
         List<Inspector> inspectorList = adminPersonnelService.getListByCityCodeList(cityCodeList);
         if (inspectorList == null || inspectorList.isEmpty()){
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "InspectorList is empty");
         }else {
             return ResultUtils.success(inspectorList);
+        }
+    }
+
+    /**
+     * 通过电话号码和city模糊查询网格员数量
+     * @param inspectorSelectDTO
+     * @return
+     */
+    @ApiOperation(value = "通过电话号码和city模糊查询网格员数量", notes = "通过电话号码和city模糊查询网格员数量")
+    @PostMapping("/getInspectorNum")
+    public BaseResponse<Integer> getInspectorNum(@RequestBody InspectorSelectDTO inspectorSelectDTO) {
+        Integer inspectorNum = adminPersonnelService.getInspectorNum(inspectorSelectDTO);
+        if (inspectorNum == null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "inspectorNum is null");
+        } else {
+            return ResultUtils.success(inspectorNum);
+        }
+    }
+
+    /**
+     * 获取查询后的网格员分页列表
+     * @param inspectorSelectDTO
+     * @return
+     */
+    @ApiOperation(value = "获取查询后的网格员分页列表", notes = "取查询后的网格员分页列表")
+    @PostMapping("/getInspectorList")
+    public BaseResponse<List<Inspector>> getInspectorList(@RequestBody InspectorSelectDTO inspectorSelectDTO) {
+        List<Inspector> inspectorList = adminPersonnelService.getInspectorList(inspectorSelectDTO);
+        if (inspectorList == null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "inspectorList is null");
+        } else {
+            return ResultUtils.success(inspectorList);
+        }
+    }
+
+    /**
+     * 通过电话号码模糊查询公众监督员数量
+     * @param telNum
+     * @return
+     */
+    @ApiOperation(value = "通过电话号码模糊查询公众监督员数量", notes = "通过电话号码模糊查询公众监督员数量")
+    @GetMapping("/getSupervisorNum")
+    public BaseResponse<Integer> getSupervisorNum(@RequestParam(required = false) String telNum) {
+        Integer supervisorNum = adminPersonnelService.getSupervisorNum(telNum);
+        if (supervisorNum == null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "supervisorNum is null");
+        } else {
+            return ResultUtils.success(supervisorNum);
+        }
+    }
+
+    /**
+     * 获取查询后的公众监督员分页列表
+     * @param telNum
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @ApiOperation(value = "获取查询后的公众监督员分页列表", notes = "获取查询后的公众监督员分页列表")
+    @GetMapping("/getSupervisorList")
+    public BaseResponse<List<Supervisor>> getSupervisorList(@RequestParam(required = false) String telNum,
+                                                            @RequestParam Integer pageNum,
+                                                            @RequestParam Integer pageSize) {
+        List<Supervisor> supervisorList = adminPersonnelService.getSupervisorList(telNum, pageNum, pageSize);
+        if (supervisorList == null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "supervisorList is null");
+        } else {
+            return ResultUtils.success(supervisorList);
         }
     }
 }

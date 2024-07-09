@@ -1,4 +1,4 @@
-package com.b430.commonmodule.config;
+package com.b430.admintaskservice.config;
 
 import com.github.pagehelper.PageInterceptor;
 import org.apache.ibatis.session.SqlSessionFactory;

@@ -3,6 +3,7 @@ package com.b430.adminpersonnelservice.service.impl;
 import com.b430.adminpersonnelservice.mapper.InfoMapper;
 import com.b430.adminpersonnelservice.mapper.InspectorMapper;
 import com.b430.adminpersonnelservice.mapper.SupervisorMapper;
+import com.b430.commonmodule.model.dto.inspector.InspectorSelectDTO;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.adminpersonnelservice.service.IAdminPersonnelService;
@@ -26,14 +27,14 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
     @Override
     public boolean editSuperVisor(Supervisor supervisor) {
         Supervisor check = supervisorMapper.selectBySupervisorId(supervisor.getSupervisorId());
-        if (check == null){
+        if (check == null) {
             System.out.println("edit Supervisor not found");
             return false;
-        }else {
-            if (!check.getTelId().equals(supervisor.getTelId()) && supervisorMapper.selectByTelId(supervisor.getTelId()) != null){
+        } else {
+            if (!check.getTelId().equals(supervisor.getTelId()) && supervisorMapper.selectByTelId(supervisor.getTelId()) != null) {
                 System.out.println("edit Supervisor telId already exist");
                 return false;
-            }else {
+            } else {
                 supervisorMapper.updateSupervisor(supervisor);
                 return true;
             }
@@ -77,17 +78,17 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
     @Override
     public boolean editInspector(Inspector inspector) {
         Inspector check = inspectorMapper.selectByInspectorId(inspector.getInspectorId());
-        if (check == null){
+        if (check == null) {
             System.out.println("edit Inspector not found");
             return false;
-        }else {
-            if (check.getInspectorCode() != inspector.getInspectorCode() && inspectorMapper.selectByInspectorCode(inspector.getInspectorCode()) != null){
+        } else {
+            if (check.getInspectorCode() != inspector.getInspectorCode() && inspectorMapper.selectByInspectorCode(inspector.getInspectorCode()) != null) {
                 System.out.println("edit Inspector inspectorCode already exist");
                 return false;
-            }else {
+            } else {
                 inspectorMapper.updateById(inspector);
                 // 判断网格员名字是否存在变更
-                if (!check.getRealName().equals(inspector.getRealName())){
+                if (!check.getRealName().equals(inspector.getRealName())) {
                     infoMapper.updateInfoInspectorName(inspector.getInspectorId(), inspector.getRealName());
                 }
                 return true;
@@ -110,5 +111,30 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
     public List<Inspector> getListByCityCodeList(List<String> cityCodeList) {
         List<Inspector> inspectorList = inspectorMapper.selectByCityCodeList(cityCodeList);
         return inspectorList;
+    }
+
+    @Override
+    public Integer getInspectorNum(InspectorSelectDTO inspectorSelectDTO) {
+        return inspectorMapper.getInspectorNum(inspectorSelectDTO);
+    }
+
+    @Override
+    public List<Inspector> getInspectorList(InspectorSelectDTO inspectorSelectDTO) {
+        int offset = (inspectorSelectDTO.getPageNum() - 1) * inspectorSelectDTO.getPageSize();
+        inspectorSelectDTO.setOffset(offset);
+        return inspectorMapper.getInspectorList(inspectorSelectDTO);
+    }
+
+    @Override
+    public Integer getSupervisorNum(String telNum) {
+        Integer supervisorNum = supervisorMapper.getSupervisorNum(telNum);
+        return supervisorNum;
+    }
+
+    @Override
+    public List<Supervisor> getSupervisorList(String telNum, Integer pageNum, Integer pageSize) {
+        int offset = (pageNum - 1) * pageSize;
+        List<Supervisor> supervisorList = supervisorMapper.getSupervisorList(telNum, pageNum, pageSize, offset);
+        return supervisorList;
     }
 }
