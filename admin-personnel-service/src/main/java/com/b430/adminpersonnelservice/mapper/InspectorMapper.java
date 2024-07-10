@@ -69,7 +69,7 @@ public interface InspectorMapper extends BaseMapper<Inspector> {
      * @param cityCodeList 城市编码列表
      * @return Inspector列表
      */
-    List<Inspector> selectByCityCodeList(List<String> cityCodeList);
+    List<Inspector> selectByCityCodeList(@Param("cityCodeList") List<String> cityCodeList);
 
     /**
      * 通过电话号码和city模糊查询网格员数量

@@ -38,6 +38,9 @@ public class Supervisor implements Serializable {
     @ApiModelProperty(value = "公众监督员登录密码")
     private String password;
 
+    @ApiModelProperty(value = "盐值")
+    private String salt;
+
     @ApiModelProperty(value = "公众监督员真实姓名")
     private String realName;
 

@@ -7,7 +7,7 @@
         SELECT * FROM info WHERE city_code = #{cityCode}
     </select>
 
-    <!-- 查询所有未删除的Info -->
+    <!-- 多条件查询Info -->
     <select id="selectMultiQuery" parameterType="com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO" resultType="com.b430.commonmodule.model.entity.Info">
         SELECT * FROM info
         <where>

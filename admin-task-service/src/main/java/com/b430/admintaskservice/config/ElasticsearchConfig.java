@@ -17,7 +17,7 @@ import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "com.b430.admintaskservice.service")
+@EnableElasticsearchRepositories(basePackages = "com.b430.admintaskservice.repository")
 public class ElasticsearchConfig extends AbstractElasticsearchConfiguration {
 
     private static final Logger logger = LoggerFactory.getLogger(ElasticsearchConfig.class);

@@ -8,6 +8,7 @@ import com.b430.commonmodule.model.dto.supervisor.SupervisorLoginRequestDTO;
 import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.commonmodule.util.JwtUtil;
+import com.b430.supervisorservice.repository.impl.SyncService;
 import com.b430.supervisorservice.service.ISupervisorService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -13,11 +13,13 @@
     </insert>
 
     <select id="getInfoWithSupervisorNum" resultType="java.lang.Integer">
-        SELECT COUNT(*) AS total_count_relate FROM info_with_supervisor;
+        SELECT COUNT(*) AS total_count_relate
+        FROM info_with_supervisor;
     </select>
 
     <select id="getInfoWithInspectorNum" resultType="java.lang.Integer">
-        SELECT COUNT(*) AS total_count_relate FROM info_with_inspector;
+        SELECT COUNT(*) AS total_count_relate
+        FROM info_with_inspector;
     </select>
 
     <select id="getInfoByInspectorId" resultType="com.b430.commonmodule.model.entity.Info">
@@ -35,13 +37,13 @@
     <select id="getInspectorByInfoId" resultType="com.b430.commonmodule.model.entity.Inspector">
         SELECT *
         FROM inspector
-        WHERE inspector_id IN (SELECT inspector_id FROM info_with_inspector WHERE info_id = #{infoId});
+        WHERE inspector_id = (SELECT inspector_id FROM info_with_inspector WHERE info_id = #{infoId});
     </select>
 
     <select id="getSupervisorByInfoId" resultType="com.b430.commonmodule.model.entity.Supervisor">
         SELECT *
         FROM supervisor
-        WHERE supervisor_id IN (SELECT supervisor_id FROM info_with_supervisor WHERE info_id = #{infoId});
+        WHERE supervisor_id = (SELECT supervisor_id FROM info_with_supervisor WHERE info_id = #{infoId});
     </select>
 
     <select id="getInfoByIId" resultType="com.b430.commonmodule.model.entity.Info">

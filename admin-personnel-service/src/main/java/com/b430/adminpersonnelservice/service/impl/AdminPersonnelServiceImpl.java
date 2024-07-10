@@ -102,7 +102,7 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
             System.out.println("add inspector already exist");
             return false;
         } else {
-            inspectorMapper.insert(inspector);
+            inspectorMapper.insertInspector(inspector);
             return true;
         }
     }

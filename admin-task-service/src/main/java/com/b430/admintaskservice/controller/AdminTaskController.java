@@ -1,5 +1,6 @@
 package com.b430.admintaskservice.controller;
 
+import com.b430.admintaskservice.repository.impl.SyncService;
 import com.b430.commonmodule.common.BaseResponse;
 import com.b430.commonmodule.common.ErrorCode;
 import com.b430.commonmodule.common.ResultUtils;
@@ -34,6 +35,9 @@ public class AdminTaskController {
     @Autowired
     private StringRedisTemplate redisTemplate;
 
+    @Autowired
+    private SyncService syncService;
+
     /**
      * 管理员登录
      *
@@ -43,13 +47,6 @@ public class AdminTaskController {
     @ApiOperation(value = "管理员登录", notes = "管理员登录接口")
     @PostMapping("/login")
     public BaseResponse<String> login(@RequestBody AdminLoginRequestDTO request) {
-//        Admin admin = adminTaskService.login(request.getAdminCode(), request.getPassword());
-//        if (admin != null) {
-//            session.setAttribute("admin", admin);
-//            return ResultUtils.success(true);
-//        } else {
-//            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "管理员登录失败");
-//        }
         Admin admin = adminTaskService.login(request.getAdminCode(), request.getPassword());
         if (admin != null) {
             String token = JwtUtil.getToken(request.getAdminCode(), "Admin", "admin-issuer");
@@ -101,10 +98,17 @@ public class AdminTaskController {
     @ApiOperation(value = "管理员多条件查询获取事务列表", notes = "管理员多条件查询获取事务列表")
     @PostMapping("/getMultiQueryInfoList")
     public BaseResponse<PageInfo<Info>> getAllInfoList(@RequestBody InfoSearchRequestDTO request) {
-        PageHelper.startPage(request.getPageNum(), request.getPageSize());
-        List<Info> infoList = adminTaskService.getMultiQueryInfoList(request);
-        PageInfo<Info> pageInfo = new PageInfo<>(infoList);
-        if (infoList == null) {
+//        PageHelper.startPage(request.getPageNum(), request.getPageSize());
+//        List<Info> infoList = adminTaskService.getMultiQueryInfoList(request);
+//        PageInfo<Info> pageInfo = new PageInfo<>(infoList);
+//        if (infoList == null) {
+//            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "获取事务信息列表失败");
+//        } else {
+//            return ResultUtils.success(pageInfo);
+//        }
+
+        PageInfo<Info> pageInfo = syncService.getMultiQueryInfoList(request);
+        if (pageInfo == null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "获取事务信息列表失败");
         } else {
             return ResultUtils.success(pageInfo);
@@ -120,12 +124,13 @@ public class AdminTaskController {
     @PostMapping("/getMultiQueryInfoCount")
     public BaseResponse<Integer> getInfoCount(@RequestBody InfoSearchRequestDTO request) {
         System.out.println(request);
-        Integer count = adminTaskService.getMultiQueryInfoCount(request);
+        Integer count = syncService.getMultiQueryInfoCount(request);
         if (count == null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "管理员多条件查询获取事务数量失败");
         } else {
             return ResultUtils.success(count);
         }
+
     }
 
     /**

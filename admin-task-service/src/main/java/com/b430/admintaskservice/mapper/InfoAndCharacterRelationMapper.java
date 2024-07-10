@@ -4,6 +4,7 @@ import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface InfoAndCharacterRelationMapper {
      * @param inspectorId
      * @return boolean是否成功
      */
-    boolean assignInspector(Integer iId, Integer infoId, Integer inspectorId);
+    boolean assignInspector(@Param("iId") Integer iId,@Param("infoId") Integer infoId,@Param("inspectorId") Integer inspectorId);
 
     /**
      * supervisor公众监督员上传事务关联表插入
@@ -67,14 +68,14 @@ public interface InfoAndCharacterRelationMapper {
      * @param infoId
      * @return inspector对象
      */
-    Inspector getInspectorByInfoId(Integer infoId);
+    Inspector getInspectorByInfoId(@Param("infoId") Integer infoId);
 
     /**
      * 根据info_id获取对应supervisor对象
      * @param infoId
      * @return supervisor对象
      */
-    Supervisor getSupervisorByInfoId(Integer infoId);
+    Supervisor getSupervisorByInfoId(@Param("infoId") Integer infoId);
 
     /**
      * 根据i_id获取对应info对象

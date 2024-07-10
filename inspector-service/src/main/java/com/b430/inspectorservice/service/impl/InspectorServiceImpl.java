@@ -4,6 +4,7 @@ import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.inspectorservice.mapper.InfoMapper;
 import com.b430.inspectorservice.mapper.InspectorMapper;
+import com.b430.inspectorservice.repository.impl.SyncService;
 import com.b430.inspectorservice.service.IInspectorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ import java.util.List;
 
 @Service
 public class InspectorServiceImpl implements IInspectorService {
+
+    @Autowired
+    private SyncService syncService;
 
     @Autowired
     private InspectorMapper inspectorMapper;
@@ -42,6 +46,7 @@ public class InspectorServiceImpl implements IInspectorService {
         }else {
             infoMapper.updateInfo(info);
             if(infoMapper.selectById(info.getInfoId()).toString().equals(info.toString())){
+                syncService.updateInfoInES(info);
                 return true;
             }else {
                 System.out.println("feedbackInfo update info failed\n");

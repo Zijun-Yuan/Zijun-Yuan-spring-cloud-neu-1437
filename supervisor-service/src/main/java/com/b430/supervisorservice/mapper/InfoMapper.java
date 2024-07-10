@@ -4,6 +4,7 @@ import com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO;
 import com.b430.commonmodule.model.entity.Info;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface InfoMapper extends BaseMapper<Info> {
      * @param cityCode 城市代码
      * @return Info对象列表
      */
-    List<Info> selectByCityCode(String cityCode);
+    List<Info> selectByCityCode(@Param("cityCode") String cityCode);
 
     /**
      * 根据多条件查询Info列表
@@ -67,7 +68,7 @@ public interface InfoMapper extends BaseMapper<Info> {
      * @param info
      * @param infoCount
      */
-    void addInfo(Info info, Integer infoCount);
+    void addInfo(@Param("info") Info info,@Param("infoCount") Integer infoCount);
 
     /**
      * 添加关联信息
@@ -75,37 +76,37 @@ public interface InfoMapper extends BaseMapper<Info> {
      * @param relateCount
      * @param supervisorId
      */
-    void addRelate(Integer infoCount, Integer relateCount, Integer supervisorId);
+    void addRelate(@Param("infoCount") Integer infoCount,@Param("relateCount") Integer relateCount,@Param("supervisorId") Integer supervisorId);
 
     /**
      * 根据网格员Id查询Info
      * @param inspectorCode inspectorId的id
      */
-    List<Info> selectByInspectorCode(String inspectorCode);
+    List<Info> selectByInspectorCode(@Param("inspectorCode") String inspectorCode);
 
     /**
      * 根据大众监督员Id查询Info
      * @param supervisorId
      * @return
      */
-    List<Info> selectBySupervisorId(Integer supervisorId);
+    List<Info> selectBySupervisorId(@Param("supervisorId") Integer supervisorId);
 
     /**
      * 管理员获取指定信息
      * @return
      */
-    Info getInfoById(Integer id);
+    Info getInfoById(@Param("id") Integer id);
 
     /**
      * 更新监督员姓名
      * @param
      */
-    void updateInfoSupervisorName(Integer supervisorId, String supervisorName);
+    void updateInfoSupervisorName(@Param("supervisorId") Integer supervisorId,@Param("supervisorName") String supervisorName);
 
     /**
      * 更新网格员姓名
      * @param
      */
-    void updateInfoInspectorName(Integer inspectorId, String inspectorName);
+    void updateInfoInspectorName(@Param("inspectorId") Integer inspectorId,@Param("inspectorName") String inspectorName);
 
 }

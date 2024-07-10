@@ -38,13 +38,6 @@ public class InspectorController {
     @ApiOperation(value = "网格员登录", notes = "网格员登录")
     @PostMapping("/login")
     public BaseResponse<Inspector> login(@RequestBody InspectorLoginRequestDTO request) {
-//        Inspector inspector = inspectorService.login(request.getInspectorCode(), request.getPassword());
-//        if (inspector != null){
-//            session.setAttribute("inspector", inspector);
-//            return ResultUtils.success(inspector);
-//        }else {
-//            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "InspectorLogin failed");
-//        }
         Inspector inspector = inspectorService.login(request.getInspectorCode(), request.getPassword());
         if (inspector != null) {
             String token = JwtUtil.getToken(request.getInspectorCode(), "Inspector", "inspector-issuer");

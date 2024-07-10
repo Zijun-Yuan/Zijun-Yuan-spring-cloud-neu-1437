@@ -4,12 +4,14 @@ package com.b430.admintaskservice.service.impl;
 import com.b430.admintaskservice.mapper.AdminMapper;
 import com.b430.admintaskservice.mapper.InfoAndCharacterRelationMapper;
 import com.b430.admintaskservice.mapper.InfoMapper;
+import com.b430.admintaskservice.repository.impl.SyncService;
 import com.b430.admintaskservice.service.IAdminTaskService;
 import com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO;
 import com.b430.commonmodule.model.entity.Admin;
 import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,9 @@ import java.util.List;
 
 @Service
 public class AdminTaskServiceImpl implements IAdminTaskService {
+
+    @Autowired
+    private SyncService syncService;
 
     @Autowired
     private AdminMapper adminMapper;
@@ -45,11 +50,13 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
         } else {
             int i_id = relationMapper.getInfoWithInspectorNum();
             relationMapper.assignInspector(i_id + 1, infoId, inspectorId);
-            Info info = infoMapper.selectById(infoId);
+            System.out.println("连接表插入成功.");
+            Info info = infoMapper.getInfoById(infoId);
             info.setStatus(2);
             info.setInspectorName(relationMapper.getInspectorByInfoId(infoId).getRealName());
-            info.setStatus(2);
             infoMapper.updateInfo(info);
+            System.out.println("Info状态更新成功."+info.getStatus());
+            syncService.updateInfoInES(info);
             return true;
         }
     }
@@ -110,6 +117,7 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
             System.out.println("info id is null");
             return null;
         } else {
+            PageHelper.clearPage();
             return relationMapper.getInspectorByInfoId(infoId);
         }
     }
@@ -120,6 +128,7 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
             System.out.println("info id is null");
             return null;
         } else {
+            PageHelper.clearPage();
             return relationMapper.getSupervisorByInfoId(infoId);
         }
     }

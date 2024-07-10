@@ -119,7 +119,7 @@ public class AdminPersonnelController {
      * @return
      */
     @ApiOperation(value = "网格员根据城市获取网格员列表", notes = "网格员根据城市获取网格员列表")
-    @GetMapping ("/getListByCityCodeList")
+    @PostMapping ("/getListByCityCodeList")
     public BaseResponse<List<Inspector>> getListByCityCodeList(@RequestBody List<String> cityCodeList){
         List<Inspector> inspectorList = adminPersonnelService.getListByCityCodeList(cityCodeList);
         if (inspectorList == null || inspectorList.isEmpty()){
