@@ -3,46 +3,55 @@
 <mapper namespace="com.b430.adminpersonnelservice.mapper.InspectorMapper">
 
     <!-- 根据inspector_code查询Inspector -->
-    <select id="selectByInspectorCode" parameterType="java.lang.String" resultType="com.b430.commonmodule.model.entity.Inspector">
-        SELECT * FROM inspector WHERE inspector_code = #{inspectorCode}
+    <select id="selectByInspectorCode" parameterType="java.lang.String"
+            resultType="com.b430.commonmodule.model.entity.Inspector">
+        SELECT *
+        FROM inspector
+        WHERE inspector_code = #{inspectorCode}
     </select>
 
     <!-- 根据inspector_id查询Inspector -->
     <select id="selectByInspectorId" resultType="com.b430.commonmodule.model.entity.Inspector">
-        SELECT * FROM inspector WHERE inspector_id = #{inspectorId}
+        SELECT *
+        FROM inspector
+        WHERE inspector_id = #{inspectorId}
     </select>
 
     <!-- 查询所有未删除的Inspector -->
     <select id="selectAllNotDeleted" resultType="com.b430.commonmodule.model.entity.Inspector">
-        SELECT * FROM inspector WHERE isdel = 0
+        SELECT *
+        FROM inspector
+        WHERE isdel = 0
     </select>
 
     <!-- 插入Inspector -->
     <insert id="insertInspector" parameterType="com.b430.commonmodule.model.entity.Inspector">
-        INSERT INTO inspector (inspector_code, password, tel_num, real_name, city_code, isdel, remarks)
-        VALUES (#{inspectorCode}, #{password}, #{telNum}, #{realName}, #{cityCode}, #{isdel}, #{remarks})
+        INSERT INTO inspector (inspector_code, password, salt, tel_num, real_name, city_code, isdel, remarks)
+        VALUES (#{inspectorCode}, #{password}, #{salt}, #{telNum}, #{realName}, #{cityCode}, #{isdel}, #{remarks})
     </insert>
 
     <!-- 更新Inspector -->
     <update id="updateInspector" parameterType="com.b430.commonmodule.model.entity.Inspector">
         UPDATE inspector
         SET inspector_code = #{inspectorCode},
-            password = #{password},
-            tel_num = #{telNum},
-            real_name = #{realName},
-            city_code = #{cityCode},
-            isdel = #{isdel},
-            remarks = #{remarks}
+            tel_num        = #{telNum},
+            real_name      = #{realName},
+            city_code      = #{cityCode},
+            isdel          = #{isdel},
+            remarks        = #{remarks}
         WHERE inspector_id = #{inspectorId}
     </update>
 
     <!-- 根据inspector_id软删除Inspector -->
     <update id="softDeleteInspector" parameterType="java.lang.Integer">
-        UPDATE inspector SET isdel = 1 WHERE inspector_id = #{inspectorId}
+        UPDATE inspector
+        SET isdel = 1
+        WHERE inspector_id = #{inspectorId}
     </update>
 
     <!-- 根据cityCodeList查询Inspector -->
-    <select id="selectByCityCodeList" parameterType="java.util.List" resultType="com.b430.commonmodule.model.entity.Inspector">
+    <select id="selectByCityCodeList" parameterType="java.util.List"
+            resultType="com.b430.commonmodule.model.entity.Inspector">
         SELECT * FROM inspector
         <where>
             <if test="cityCodeList!= null and cityCodeList.size() > 0">
@@ -70,21 +79,21 @@
         </where>
     </select>
 
-<!--    <select id="getInspectorNum" resultType="java.lang.Integer">-->
-<!--        SELECT COUNT(*)-->
-<!--        FROM inspector-->
-<!--        <where>-->
-<!--            <if test="inspectorSelectDTO.telNum != null and inspectorSelectDTO.telNum != ''">-->
-<!--                AND tel_num LIKE CONCAT('%', #{inspectorSelectDTO.telNum}, '%')-->
-<!--            </if>-->
-<!--            <if test="inspectorSelectDTO.cityCodeList != null and inspectorSelectDTO.cityCodeList.size() > 0">-->
-<!--                AND city_code IN-->
-<!--                <foreach item="cityCode" collection="inspectorSelectDTO.cityCodeList" open="(" separator="," close=")">-->
-<!--                    #{cityCode}-->
-<!--                </foreach>-->
-<!--            </if>-->
-<!--        </where>-->
-<!--    </select>-->
+    <!--    <select id="getInspectorNum" resultType="java.lang.Integer">-->
+    <!--        SELECT COUNT(*)-->
+    <!--        FROM inspector-->
+    <!--        <where>-->
+    <!--            <if test="inspectorSelectDTO.telNum != null and inspectorSelectDTO.telNum != ''">-->
+    <!--                AND tel_num LIKE CONCAT('%', #{inspectorSelectDTO.telNum}, '%')-->
+    <!--            </if>-->
+    <!--            <if test="inspectorSelectDTO.cityCodeList != null and inspectorSelectDTO.cityCodeList.size() > 0">-->
+    <!--                AND city_code IN-->
+    <!--                <foreach item="cityCode" collection="inspectorSelectDTO.cityCodeList" open="(" separator="," close=")">-->
+    <!--                    #{cityCode}-->
+    <!--                </foreach>-->
+    <!--            </if>-->
+    <!--        </where>-->
+    <!--    </select>-->
 
     <select id="getInspectorList" resultType="com.b430.commonmodule.model.entity.Inspector">
         SELECT *

@@ -7,6 +7,7 @@ import com.b430.commonmodule.model.dto.inspector.InspectorSelectDTO;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.adminpersonnelservice.service.IAdminPersonnelService;
+import com.b430.commonmodule.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,6 +103,9 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
             System.out.println("add inspector already exist");
             return false;
         } else {
+            String salt = MD5Util.getSalt();
+            inspector.setSalt(salt);
+            inspector.setPassword(MD5Util.md5(inspector.getPassword(), salt));
             inspectorMapper.insertInspector(inspector);
             return true;
         }

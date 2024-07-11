@@ -40,12 +40,12 @@ public class InspectorServiceImpl implements IInspectorService {
 
     @Override
     public boolean feedbackInfo(Info info) {
-        if(infoMapper.selectById(info.getInfoId())==null){
+        if(infoMapper.getInfoById(info.getInfoId())==null){
             System.out.println("feedbackInfo finding info failed\n");
             return false;
         }else {
             infoMapper.updateInfo(info);
-            if(infoMapper.selectById(info.getInfoId()).toString().equals(info.toString())){
+            if(infoMapper.getInfoById(info.getInfoId()).toString().equals(info.toString())){
                 syncService.updateInfoInES(info);
                 return true;
             }else {
