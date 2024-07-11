@@ -6,7 +6,6 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -26,6 +25,7 @@ public class GlobalFilterConfig implements GlobalFilter {
         ServerHttpResponse response = exchange.getResponse();
 
         String path = request.getURI().getPath();
+        System.out.println("Path: " + path);
         if (path.startsWith("/api/admin/task/login") || path.startsWith("/api/supervisor/login")
                 || path.startsWith("/api/supervisor/register") || path.startsWith("/api/inspector/login")
                 || path.startsWith("/api/dataScreen") || path.startsWith("/api/location")) {

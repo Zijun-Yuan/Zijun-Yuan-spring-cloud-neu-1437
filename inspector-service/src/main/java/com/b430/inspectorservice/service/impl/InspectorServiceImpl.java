@@ -2,6 +2,7 @@ package com.b430.inspectorservice.service.impl;
 
 import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
+import com.b430.commonmodule.util.MD5Util;
 import com.b430.inspectorservice.mapper.InfoMapper;
 import com.b430.inspectorservice.mapper.InspectorMapper;
 import com.b430.inspectorservice.repository.impl.SyncService;
@@ -26,8 +27,12 @@ public class InspectorServiceImpl implements IInspectorService {
     @Override
     public Inspector login(String inspectorCode, String password) {
         Inspector inspector = inspectorMapper.selectByInspectorCode(inspectorCode);
-        if (inspector.getPassword().equals(password)) {
-            return inspector;
+        if (inspector != null) {
+            String salt = inspector.getSalt();
+            String MD5Password = MD5Util.md5(password, salt);
+            if (inspector.getPassword().equals(MD5Password)){
+                return inspector;
+            }
         }
         return null;
     }
