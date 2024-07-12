@@ -66,9 +66,8 @@ public interface InfoMapper extends BaseMapper<Info> {
     /**
      * 公众监督员反馈事务信息
      * @param info
-     * @param infoCount
      */
-    void addInfo(@Param("info") Info info,@Param("infoCount") Integer infoCount);
+    void addInfo(Info info);
 
     /**
      * 添加关联信息

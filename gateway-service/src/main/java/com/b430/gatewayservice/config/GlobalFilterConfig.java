@@ -72,6 +72,7 @@ public class GlobalFilterConfig implements GlobalFilter {
         }
 
         if (!isAuthorizedPath(path, role)) {
+            System.out.println(path + "  " + role);
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return response.setComplete();
         }

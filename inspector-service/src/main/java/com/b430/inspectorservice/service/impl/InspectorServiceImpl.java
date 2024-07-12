@@ -45,7 +45,7 @@ public class InspectorServiceImpl implements IInspectorService {
     }
 
     @Override
-    @GlobalTransactional
+    @GlobalTransactional(name = "my_test_tx_group")
     public boolean feedbackInfo(Info info) {
         if(infoMapper.getInfoById(info.getInfoId())==null){
             System.out.println("feedbackInfo finding info failed\n");

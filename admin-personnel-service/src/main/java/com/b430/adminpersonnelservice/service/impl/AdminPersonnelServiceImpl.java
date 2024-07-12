@@ -106,6 +106,7 @@ public class AdminPersonnelServiceImpl implements IAdminPersonnelService {
             String salt = MD5Util.getSalt();
             inspector.setSalt(salt);
             inspector.setPassword(MD5Util.md5(inspector.getPassword(), salt));
+            inspector.setIsdel(0);
             inspectorMapper.insertInspector(inspector);
             return true;
         }

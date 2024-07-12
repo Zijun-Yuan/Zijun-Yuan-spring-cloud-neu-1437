@@ -13,7 +13,6 @@ import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.b430.admintaskservice.service.IAdminTaskService;
 import com.b430.commonmodule.util.JwtUtil;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -106,7 +105,6 @@ public class AdminTaskController {
 //        } else {
 //            return ResultUtils.success(pageInfo);
 //        }
-
         PageInfo<Info> pageInfo = syncService.getMultiQueryInfoList(request);
         if (pageInfo == null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "获取事务信息列表失败");

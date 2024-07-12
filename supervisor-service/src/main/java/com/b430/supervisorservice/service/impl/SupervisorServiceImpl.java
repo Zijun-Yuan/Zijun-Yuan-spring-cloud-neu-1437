@@ -101,14 +101,15 @@ public class SupervisorServiceImpl implements ISupervisorService {
     }
 
     @Override
-    @GlobalTransactional
+    @GlobalTransactional(name = "default_tx_group")
     public boolean addInfo(Info info) {
         int infoCount = infoMapper.getInfoNum();
         int relateCount = infoAndCharacterRelationMapper.getInfoWithSupervisorNum();
         int supervisorId = supervisorMapper.getSupervisorIdByName(info.getSupervisorName());
-        infoMapper.addInfo(info, infoCount);
-        infoMapper.addRelate(infoCount, relateCount, supervisorId);
         info.setInfoId(infoCount + 1);
+        System.out.println(info.getInfoId() + " " + info.getStatus() + " " + info.getSupervisorName());
+        infoMapper.addInfo(info);
+        infoMapper.addRelate(infoCount + 1, relateCount + 1, supervisorId);
         syncService.addInfoToES(info);
         return true;
     }

@@ -44,7 +44,7 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
     }
 
     @Override
-    @GlobalTransactional
+    @GlobalTransactional(name = "my_test_tx_group")
     public boolean setInfoToInspector(Integer infoId, Integer inspectorId) {
         if (infoId == null || inspectorId == null) {
             System.out.println("Info id or Inspector id is null.");

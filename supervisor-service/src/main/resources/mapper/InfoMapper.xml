@@ -130,15 +130,15 @@
     </select>
 
     <!-- 公众监督员反馈事务信息 -->
-    <insert id="addInfo" parameterType="map">
+    <insert id="addInfo" parameterType="com.b430.commonmodule.model.entity.Info">
         INSERT INTO info (info_id, status, aqi_level, city_code, address, feedback, time_supervisor, so2, co, o3, pm25, supervisor_name, inspector_name)
-        VALUES (#{infoCount}+1, #{info.status}, #{info.aqiLevel}, #{info.cityCode}, #{info.address}, #{info.feedback}, #{info.timeSupervisor}, #{info.so2}, #{info.co}, #{info.o3}, #{info.pm25}, #{info.supervisorName}, #{info.inspectorName})
+        VALUES (#{infoId}, #{status}, #{aqiLevel}, #{cityCode}, #{address}, #{feedback}, #{timeSupervisor}, #{so2}, #{co}, #{o3}, #{pm25}, #{supervisorName}, #{inspectorName})
     </insert>
 
     <!-- 添加关联信息 -->
     <insert id="addRelate" parameterType="map">
         INSERT INTO info_with_supervisor (s_id, info_id, supervisor_id)
-        VALUES (#{relateCount}+1, #{infoCount}+1, #{supervisorId})
+        VALUES (#{relateCount}, #{infoCount}, #{supervisorId})
     </insert>
 
     <!-- 更新Info的公众监督员名称 -->
