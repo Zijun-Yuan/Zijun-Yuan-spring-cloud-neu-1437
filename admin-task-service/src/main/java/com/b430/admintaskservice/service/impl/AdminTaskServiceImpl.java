@@ -12,6 +12,7 @@ import com.b430.commonmodule.model.entity.Info;
 import com.b430.commonmodule.model.entity.Inspector;
 import com.b430.commonmodule.model.entity.Supervisor;
 import com.github.pagehelper.PageHelper;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,7 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
     }
 
     @Override
+    @GlobalTransactional
     public boolean setInfoToInspector(Integer infoId, Integer inspectorId) {
         if (infoId == null || inspectorId == null) {
             System.out.println("Info id or Inspector id is null.");
@@ -50,12 +52,10 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
         } else {
             int i_id = relationMapper.getInfoWithInspectorNum();
             relationMapper.assignInspector(i_id + 1, infoId, inspectorId);
-            System.out.println("连接表插入成功.");
             Info info = infoMapper.getInfoById(infoId);
             info.setStatus(2);
             info.setInspectorName(relationMapper.getInspectorByInfoId(infoId).getRealName());
             infoMapper.updateInfo(info);
-            System.out.println("Info状态更新成功."+info.getStatus());
             syncService.updateInfoInES(info);
             return true;
         }
@@ -71,25 +71,10 @@ public class AdminTaskServiceImpl implements IAdminTaskService {
         return infoMapper.getMultiQueryInfoNum(requestDTO);
     }
 
-//    @Override
-//    public Integer getInfoCountByStatus(Integer status) {
-//        return infoMapper.getInfoNumByStatus(status);
-//    }
-
     @Override
     public Info getInfoById(Integer id) {
         return infoMapper.getInfoById(id);
     }
-
-//    @Override
-//    public List<Info> getInfoListByStatus(Integer status) {
-//        return infoMapper.selectAllByStatus(status);
-//    }
-
-//    @Override
-//    public List<Info> getAllAssignedInfoList() {
-//        return infoMapper.selectAllAssigned();
-//    }
 
     @Override
     public List<Info> getInspectorInfoList(String inspectorCode) {

@@ -7,6 +7,7 @@ import com.b430.inspectorservice.mapper.InfoMapper;
 import com.b430.inspectorservice.mapper.InspectorMapper;
 import com.b430.inspectorservice.repository.impl.SyncService;
 import com.b430.inspectorservice.service.IInspectorService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class InspectorServiceImpl implements IInspectorService {
     }
 
     @Override
+    @GlobalTransactional
     public boolean feedbackInfo(Info info) {
         if(infoMapper.getInfoById(info.getInfoId())==null){
             System.out.println("feedbackInfo finding info failed\n");

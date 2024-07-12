@@ -9,6 +9,7 @@ import com.b430.supervisorservice.mapper.InfoMapper;
 import com.b430.supervisorservice.mapper.SupervisorMapper;
 import com.b430.supervisorservice.repository.impl.SyncService;
 import com.b430.supervisorservice.service.ISupervisorService;
+import io.seata.spring.annotation.GlobalTransactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,6 +101,7 @@ public class SupervisorServiceImpl implements ISupervisorService {
     }
 
     @Override
+    @GlobalTransactional
     public boolean addInfo(Info info) {
         int infoCount = infoMapper.getInfoNum();
         int relateCount = infoAndCharacterRelationMapper.getInfoWithSupervisorNum();
