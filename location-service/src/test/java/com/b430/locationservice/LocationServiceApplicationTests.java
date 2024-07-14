@@ -2,8 +2,9 @@ package com.b430.locationservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 
-@SpringBootTest
+@TestConfiguration
 class LocationServiceApplicationTests {
 
     @Test

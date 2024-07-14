@@ -6,6 +6,8 @@ import com.b430.commonmodule.model.dto.info.InfoSearchRequestDTO;
 import com.b430.commonmodule.model.entity.Info;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.update.UpdateRequest;
@@ -14,6 +16,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.core.CountRequest;
 import org.elasticsearch.client.core.CountResponse;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
@@ -46,10 +50,100 @@ public class SyncService {
     @PostConstruct
     public void init() {
         try {
+            if (!isIndexExists("info")) {
+                createIndex("info");
+            }
             if (!isIndexPopulated("info")) {
                 syncData();
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isIndexExists(String indexName) {
+        try {
+            GetIndexRequest request = new GetIndexRequest();
+            request.indices(indexName);
+            return client.indices().exists(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    private void createIndex(String indexName) {
+        try {
+            String mapping = "{\n" +
+                    "  \"info\": {\n" +
+                    "    \"mappings\": {\n" +
+                    "      \"properties\": {\n" +
+                    "        \"_class\": {\n" +
+                    "          \"type\": \"keyword\",\n" +
+                    "          \"index\": false,\n" +
+                    "          \"doc_values\": false\n" +
+                    "        },\n" +
+                    "        \"address\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"aqiLevel\": {\n" +
+                    "          \"type\": \"integer\"\n" +
+                    "        },\n" +
+                    "        \"aqiReal\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"cityCode\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"co\": {\n" +
+                    "          \"type\": \"double\"\n" +
+                    "        },\n" +
+                    "        \"feedback\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"infoId\": {\n" +
+                    "          \"type\": \"long\"\n" +
+                    "        },\n" +
+                    "        \"inspectorName\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"o3\": {\n" +
+                    "          \"type\": \"double\"\n" +
+                    "        },\n" +
+                    "        \"pm25\": {\n" +
+                    "          \"type\": \"double\"\n" +
+                    "        },\n" +
+                    "        \"so2\": {\n" +
+                    "          \"type\": \"double\"\n" +
+                    "        },\n" +
+                    "        \"status\": {\n" +
+                    "          \"type\": \"integer\"\n" +
+                    "        },\n" +
+                    "        \"supervisorName\": {\n" +
+                    "          \"type\": \"text\"\n" +
+                    "        },\n" +
+                    "        \"timeInspector\": {\n" +
+                    "          \"type\": \"date\",\n" +
+                    "          \"format\": \"yyyy-MM-dd HH:mm:ss || yyyy-MM-dd'T'HH:mm:ss'+08:00' || strict_date_optional_time || epoch_millis\"\n" +
+                    "        },\n" +
+                    "        \"timeSupervisor\": {\n" +
+                    "          \"type\": \"date\",\n" +
+                    "          \"format\": \"yyyy-MM-dd HH:mm:ss || yyyy-MM-dd'T'HH:mm:ss'+08:00' || strict_date_optional_time || epoch_millis\"\n" +
+                    "        }\n" +
+                    "      }\n" +
+                    "    }\n" +
+                    "  }\n" +
+                    "}";
+
+            CreateIndexRequest request = new CreateIndexRequest(indexName);
+            request.settings(Settings.builder()
+                    .put("index.number_of_shards", 1)
+                    .put("index.number_of_replicas", 0)
+            );
+            request.mapping(mapping, XContentType.JSON);
+            client.indices().create(request, RequestOptions.DEFAULT);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -205,7 +299,7 @@ public class SyncService {
             updateRequest.doc("status", info.getStatus(), "inspectorName", info.getInspectorName());
             UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
             if (updateResponse.status().getStatus() == 200) {
-                System.out.println("Successfully updated info in ES: " + info.getInfoId()+" " + info.getInspectorName() + " " + info.getStatus());
+                System.out.println("Successfully updated info in ES: " + info.getInfoId() + " " + info.getInspectorName() + " " + info.getStatus());
                 return true;
             } else {
                 System.out.println("Failed to update info in ES: " + updateResponse.status());

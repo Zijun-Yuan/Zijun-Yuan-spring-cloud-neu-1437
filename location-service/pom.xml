@@ -114,12 +114,6 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
-        <!--  feign  -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-openfeign-core</artifactId>
-        </dependency>
-
         <!--  sentinel  -->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
@@ -133,6 +127,14 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

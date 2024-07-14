@@ -1,0 +1,80 @@
+version: '3.8'
+
+services:
+  admin-data-service:
+    build:
+      context: ./admin-data-service
+      dockerfile: Dockerfile
+    container_name: admin-data-service
+    ports:
+      - "9085:9085"
+    depends_on:
+      - gateway-service
+
+  admin-personnel-service:
+    build:
+      context: ./admin-personnel-service
+      dockerfile: Dockerfile
+    container_name: admin-personnel-service
+    ports:
+      - "9084:9084"
+    depends_on:
+      - gateway-service
+
+  admin-task-service:
+    build:
+      context: ./admin-task-service
+      dockerfile: Dockerfile
+    container_name: admin-task-service
+    ports:
+      - "9083:9083"
+    depends_on:
+      - gateway-service
+
+  data-screen-service:
+    build:
+      context: ./data-screen-service
+      dockerfile: Dockerfile
+    container_name: data-screen-service
+    ports:
+      - "9086:9086"
+    depends_on:
+      - gateway-service
+
+  gateway-service:
+    build:
+      context: ./gateway-service
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    ports:
+      - "9998:9998"
+
+  inspector-service:
+    build:
+      context: ./inspector-service
+      dockerfile: Dockerfile
+    container_name: inspector-service
+    ports:
+      - "9082:9082"
+    depends_on:
+      - gateway-service
+
+  location-service:
+    build:
+      context: ./location-service
+      dockerfile: Dockerfile
+    container_name: location-service
+    ports:
+      - "9087:9087"
+    depends_on:
+      - gateway-service
+
+  supervisor-service:
+    build:
+      context: ./supervisor-service
+      dockerfile: Dockerfile
+    container_name: supervisor-service
+    ports:
+      - "9081:9081"
+    depends_on:
+      - gateway-service

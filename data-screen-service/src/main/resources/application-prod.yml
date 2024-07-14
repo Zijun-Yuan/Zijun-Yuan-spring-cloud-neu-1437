@@ -1,20 +1,5 @@
-#spring:
-#  application:
-#    name: admin-data-service
-#  config:
-#    import: nacos:admin-data-service-dev.yml
-#  profiles:
-#    active: dev
-#  cloud:
-#    nacos:
-#      discovery:
-#        server-addr: localhost:8848
-#      config:
-#        server-addr: localhost:8848
-#        file-extension: yml
-
 server:
-  port: 9085
+  port: 9086
   servlet:
     context-path: /api
     session:
@@ -33,62 +18,48 @@ mybatis-plus:
 
 spring:
   application:
-    name: admin-data-service
+    name: data-screen-service
   config:
-    import: optional:nacos:admin-data-service-dev.yml
+    import: optional:nacos:data-screen-service-prod.yml
   profiles:
-    active: dev
+    active: prod
   cloud:
     sentinel:
       transport:
-        dashboard: localhost:8080
+        dashboard: sentinel-dashboard:8080
         port: 8719
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  # session 配置
   session:
-    # todo 取消注释开启分布式 session（须先配置 Redis）
-    # store-type: redis
-    # 30 天过期
     timeout: 2592000
-  # 数据库配置
-  # todo 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://sh-cynosdbmysql-grp-p5gfqnbw.sql.tencentcdb.com:26557/eps
     username: root
     password: B430@2023
-  # Redis 配置
-  # todo 需替换配置，然后取消注释
   redis:
     database: 0
-    host: localhost
+    host: redis
     port: 6379
-    timeout: 3600000 # 1小时
+    timeout: 3600000
     jedis:
       pool:
         max-active: 8
         max-idle: 8
         min-idle: 0
-  #    password: 123456
-  # Elasticsearch 配置
-  # todo 需替换配置，然后取消注释
   elasticsearch:
-    host: localhost
+    host: elasticsearch
     port: 9200
     username: root
     password: 123456
-  # 文件上传
   servlet:
     multipart:
-      # 大小限制
       max-file-size: 10MB
   jackson:
     date-format: "yyyy-MM-dd'T'HH:mm:ss"
     time-zone: GMT
 
-# 接口文档配置
 knife4j:
   enable: true
   openapi:
@@ -98,4 +69,4 @@ knife4j:
       default:
         api-rule: package
         api-rule-resources:
-          - com.b430.admindataservice.controller
+          - com.b430.datascreenservice.controller
