@@ -21,8 +21,6 @@ spring:
     name: inspector-service
   config:
     import: optional:nacos:inspector-service-prod.yml
-  profiles:
-    active: prod
   cloud:
     sentinel:
       transport:
@@ -35,7 +33,7 @@ spring:
     timeout: 2592000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://sh-cynosdbmysql-grp-p5gfqnbw.sql.tencentcdb.com:26557/eps
+    url: jdbc:mysql://mysql:3306/neu1437
     username: root
     password: B430@2023
   redis:

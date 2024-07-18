@@ -1,4 +1,5 @@
 server:
+  address: 0.0.0.0
   port: 9086
   servlet:
     context-path: /api
@@ -21,9 +22,15 @@ spring:
     name: data-screen-service
   config:
     import: optional:nacos:data-screen-service-prod.yml
-  profiles:
-    active: prod
   cloud:
+    nacos:
+      discovery:
+        server-addr: nacos:8848
+      config:
+        server-addr: nacos:8848
+        grpc:
+          enabled: true
+          server-addr: nacos:9848
     sentinel:
       transport:
         dashboard: sentinel-dashboard:8080
@@ -35,7 +42,7 @@ spring:
     timeout: 2592000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://sh-cynosdbmysql-grp-p5gfqnbw.sql.tencentcdb.com:26557/eps
+    url: jdbc:mysql://mysql:3306/neu1437
     username: root
     password: B430@2023
   redis:
@@ -70,3 +77,18 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.b430.datascreenservice.controller
+
+#spring:
+#  application:
+#    name: data-screen-service
+#  config:
+#    import: nacos:data-screen-service-prod.yml
+#    activate:
+#      on-profile: prod
+#  cloud:
+#    nacos:
+#      discovery:
+#        server-addr: nacos:8848
+#      config:
+#        server-addr: nacos:8848
+#        file-extension: yml
